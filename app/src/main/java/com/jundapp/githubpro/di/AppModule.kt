@@ -1,5 +1,6 @@
 package com.jundapp.githubpro.di
 
+import com.jundapp.githubpro.activity.detailuser.DetailUserViewModel
 import com.jundapp.githubpro.core.domain.usecase.UserInteractor
 import com.jundapp.githubpro.core.domain.usecase.UserUseCase
 import com.jundapp.githubpro.core.ui.UserListViewModel
@@ -11,11 +12,8 @@ object AppModule {
         factory<UserUseCase> { UserInteractor(get()) }
     }
 
-    // TODO : add view model
     val viewModelModule = module {
         viewModel { UserListViewModel(get()) }
-//        viewModel { HomeViewModel(get()) }
-//        viewModel { FavoriteViewModel(get()) }
-//        viewModel { DetailTourismViewModel(get()) }
+        viewModel { DetailUserViewModel(get()) }
     }
 }

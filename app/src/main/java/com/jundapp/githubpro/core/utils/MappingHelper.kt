@@ -1,7 +1,9 @@
 package com.jundapp.githubpro.core.utils
 
 import com.jundapp.githubpro.core.data.source.local.entity.UserEntity
+import com.jundapp.githubpro.core.data.source.remote.response.DetailUserResponse
 import com.jundapp.githubpro.core.data.source.remote.response.UserResponse
+import com.jundapp.githubpro.core.domain.model.DetailUserData
 import com.jundapp.githubpro.core.domain.model.User
 
 object MappingHelper {
@@ -33,4 +35,13 @@ object MappingHelper {
         }
         return userList
     }
+
+    fun mapDetailUserResponsesToDomain(data: DetailUserResponse): DetailUserData = DetailUserData(
+        username = data.username,
+        id = data.id,
+        avatar_url = data.avatar_url,
+        name = data.name,
+        location = data.location,
+        company = data.company
+    )
 }

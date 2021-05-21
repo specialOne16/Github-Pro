@@ -1,12 +1,13 @@
 package com.jundapp.githubpro.core.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.jundapp.githubpro.core.data.source.local.LocalDataSource
 import com.jundapp.githubpro.core.data.source.remote.RemoteDataSource
 import com.jundapp.githubpro.core.data.source.remote.network.ApiResponse
+import com.jundapp.githubpro.core.data.source.remote.response.DetailUserResponse
 import com.jundapp.githubpro.core.data.source.remote.response.UserResponse
+import com.jundapp.githubpro.core.domain.model.DetailUserData
 import com.jundapp.githubpro.core.domain.model.User
 import com.jundapp.githubpro.core.domain.repository.IUserRepository
 import com.jundapp.githubpro.core.utils.AppExecutors
@@ -38,22 +39,16 @@ class UserRepository constructor(
             }
         }.asLiveData()
 
-    override fun getAllUser(keyword: String): LiveData<Resource<List<User>>> {
-        // TODO("Not yet implemented")
-        return MutableLiveData()
-    }
+    override fun getUser(username: String): LiveData<Resource<DetailUserData>> =
+        object : NetworkOnlyResource<DetailUserData, DetailUserResponse>(appExecutors) {
+            override fun createCall(): LiveData<ApiResponse<DetailUserResponse>> =
+                remoteDataSource.getUser(username)
 
-    override fun getAllFavoriteUser(): LiveData<List<User>> {
-        // TODO : change to favorite user
-        return Transformations.map(localDataSource.getAllUser()) {
-            MappingHelper.mapEntitiesToDomain(it)
-        }
-    }
+            override fun mapType(request: DetailUserResponse): DetailUserData =
+                MappingHelper.mapDetailUserResponsesToDomain(request)
 
-    override fun setFavoriteUser(user: User, state: Boolean) {
-        val userEntity = MappingHelper.mapDomainToEntity(user)
-        // TODO : set favorite user
-//        appExecutors.diskIO().execute { localDataSource.setFavoriteTourism(userEntity, state) }
-    }
+            override fun loadEmpty(): DetailUserData =
+                DetailUserData("", 0, "", "", "", "")
+        }.asLiveData()
 
 }
