@@ -8,4 +8,7 @@ import com.jundapp.githubpro.core.domain.model.User
 interface IUserRepository {
     fun getAllUser(): LiveData<Resource<List<User>>>
     fun getUser(username: String): LiveData<Resource<DetailUserData>>
+
+    fun getFollowing(username: String): LiveData<Resource<List<User>>>
+    fun getFollower(username: String): LiveData<Resource<List<User>>>
 }

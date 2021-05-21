@@ -39,6 +39,58 @@ class RemoteDataSource(private val apiService: ApiService) {
 
     }
 
+    fun getFollowing(username: String): LiveData<ApiResponse<List<UserResponse>>> {
+
+        val resultData = MutableLiveData<ApiResponse<List<UserResponse>>>()
+
+        val client = apiService.getFollowing(username)
+
+        client.enqueue(object : Callback<List<UserResponse>> {
+            override fun onResponse(
+                call: Call<List<UserResponse>>,
+                response: Response<List<UserResponse>>
+            ) {
+                val dataArray = response.body()
+                resultData.value =
+                    if (dataArray != null) ApiResponse.Success(dataArray) else ApiResponse.Empty
+            }
+
+            override fun onFailure(call: Call<List<UserResponse>>, t: Throwable) {
+                resultData.value = ApiResponse.Error(t.message.toString())
+                Log.e("RemoteDataSource", t.message.toString())
+            }
+        })
+
+        return resultData
+
+    }
+
+    fun getFollowers(username: String): LiveData<ApiResponse<List<UserResponse>>> {
+
+        val resultData = MutableLiveData<ApiResponse<List<UserResponse>>>()
+
+        val client = apiService.getFollower(username)
+
+        client.enqueue(object : Callback<List<UserResponse>> {
+            override fun onResponse(
+                call: Call<List<UserResponse>>,
+                response: Response<List<UserResponse>>
+            ) {
+                val dataArray = response.body()
+                resultData.value =
+                    if (dataArray != null) ApiResponse.Success(dataArray) else ApiResponse.Empty
+            }
+
+            override fun onFailure(call: Call<List<UserResponse>>, t: Throwable) {
+                resultData.value = ApiResponse.Error(t.message.toString())
+                Log.e("RemoteDataSource", t.message.toString())
+            }
+        })
+
+        return resultData
+
+    }
+
     fun getUser(username: String): LiveData<ApiResponse<DetailUserResponse>> {
 
         val resultData = MutableLiveData<ApiResponse<DetailUserResponse>>()

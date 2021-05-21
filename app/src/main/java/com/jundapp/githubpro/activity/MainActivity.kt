@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showList(keyword: String){
-        val userListFragment = UserListFragment.newInstance("https://api.github.com/search/users?q=${keyword}")
+        val userListFragment = UserListFragment.newInstance()
         supportFragmentManager
             .beginTransaction()
             .replace(binding.userListContainer.id, userListFragment)

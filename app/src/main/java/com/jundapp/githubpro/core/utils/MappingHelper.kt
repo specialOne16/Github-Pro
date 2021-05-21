@@ -44,4 +44,13 @@ object MappingHelper {
         location = data.location,
         company = data.company
     )
+
+    fun mapUserResponsesToDomain(data: List<UserResponse>): List<User> =
+        data.map {
+            User(
+                username = it.username,
+                id = it.id,
+                avatar_url = it.avatar_url
+            )
+        }
 }

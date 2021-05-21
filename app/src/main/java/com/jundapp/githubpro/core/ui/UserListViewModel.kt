@@ -3,6 +3,8 @@ package com.jundapp.githubpro.core.ui
 import androidx.lifecycle.ViewModel
 import com.jundapp.githubpro.core.domain.repository.IUserRepository
 
-class UserListViewModel(userRepository: IUserRepository) : ViewModel() {
+class UserListViewModel(val userRepository: IUserRepository) : ViewModel() {
     val users = userRepository.getAllUser()
+    fun getFollower(username: String) = userRepository.getFollower(username)
+    fun getFollowing(username: String) = userRepository.getFollowing(username)
 }

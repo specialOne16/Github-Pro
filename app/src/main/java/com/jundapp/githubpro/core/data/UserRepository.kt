@@ -51,4 +51,24 @@ class UserRepository constructor(
                 DetailUserData("", 0, "", "", "", "")
         }.asLiveData()
 
+    override fun getFollowing(username: String): LiveData<Resource<List<User>>> =
+        object : NetworkOnlyResource<List<User>, List<UserResponse>>(appExecutors) {
+            override fun createCall(): LiveData<ApiResponse<List<UserResponse>>> =
+                remoteDataSource.getFollowing(username)
+
+            override fun mapType(request: List<UserResponse>): List<User> = MappingHelper.mapUserResponsesToDomain(request)
+
+            override fun loadEmpty(): List<User> = arrayListOf()
+        }.asLiveData()
+
+    override fun getFollower(username: String): LiveData<Resource<List<User>>> =
+        object : NetworkOnlyResource<List<User>, List<UserResponse>>(appExecutors) {
+            override fun createCall(): LiveData<ApiResponse<List<UserResponse>>> =
+                remoteDataSource.getFollowers(username)
+
+            override fun mapType(request: List<UserResponse>): List<User> = MappingHelper.mapUserResponsesToDomain(request)
+
+            override fun loadEmpty(): List<User> = arrayListOf()
+        }.asLiveData()
+
 }

@@ -14,15 +14,18 @@ import com.jundapp.githubpro.databinding.FragmentUserListBinding
 import org.koin.android.viewmodel.ext.android.viewModel
 
 const val ARG_URL = "param_url"
+const val ARG_UNAME = "param_username"
 
 class UserListFragment : Fragment() {
-    // TODO : Handle different URL
-    private var url: String? = null
+
+    private var type: String? = null
+    private var username: String? = null
 
     private val userListViewModel: UserListViewModel by viewModel()
     private var _binding: FragmentUserListBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var userListAdapter: UserListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,16 +38,16 @@ class UserListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        url?.let { getUserList(it) }
+        getUserList()
     }
 
-    private fun getUserList(url: String) {
+    private fun getUserList() {
         if (activity != null) {
-            val userListAdapter = UserListAdapter(activity!!)
+            userListAdapter = UserListAdapter(activity!!)
             binding.listUser.adapter = userListAdapter
             binding.listUser.layoutManager = LinearLayoutManager(context)
 
-            userListAdapter.setOnItemClickCallback(object : UserListAdapter.OnItemClickCallback{
+            userListAdapter.setOnItemClickCallback(object : UserListAdapter.OnItemClickCallback {
                 override fun onItemClicked(data: User) {
                     val i = Intent(activity, DetailUserActivity::class.java)
                     i.putExtra(DetailUserActivity.EXTRA_USER, data)
@@ -52,31 +55,50 @@ class UserListFragment : Fragment() {
                 }
             })
 
-            userListViewModel.users.observe(viewLifecycleOwner, { users ->
-                if (users != null) {
-                    when(users){
-                        is Resource.Loading -> binding.progressCircular.visibility = View.VISIBLE
-                        is Resource.Success -> {
-                            binding.progressCircular.visibility = View.GONE
-                            userListAdapter.data = users.data!!
-                            userListAdapter.notifyDataSetChanged()
-                        }
-                        is Resource.Error -> {
-                            binding.progressCircular.visibility = View.GONE
-                            // TODO : Show Error
-                        }
-                    }
-                }
-            })
+            observeLiveData()
+        }
+    }
+
+    private fun observeLiveData() {
+        username?.let {
+            when (type) {
+                TYPE_FOLLOWER -> userListViewModel.getFollower(it)
+                    .observe(viewLifecycleOwner, { users -> updateUi(users) })
+                TYPE_FOLLOWING -> userListViewModel.getFollowing(it)
+                    .observe(viewLifecycleOwner, { users -> updateUi(users) })
+                else -> userListViewModel.users.observe(
+                    viewLifecycleOwner,
+                    { users -> updateUi(users) })
+            }
+        } ?: userListViewModel.users.observe(viewLifecycleOwner, { users -> updateUi(users) })
+    }
+
+    private fun updateUi(users: Resource<List<User>>) {
+        when (users) {
+            is Resource.Loading -> binding.progressCircular.visibility = View.VISIBLE
+            is Resource.Success -> {
+                binding.progressCircular.visibility = View.GONE
+                userListAdapter.data = users.data!!
+                userListAdapter.notifyDataSetChanged()
+            }
+            is Resource.Error -> {
+                binding.progressCircular.visibility = View.GONE
+                // TODO : Show Error
+            }
         }
     }
 
     companion object {
+        const val TYPE_ALL = "type_all_user"
+        const val TYPE_FOLLOWING = "type_following"
+        const val TYPE_FOLLOWER = "type_follower"
+
         @JvmStatic
-        fun newInstance(url: String) =
+        fun newInstance(url: String = TYPE_ALL, username: String? = null) =
             UserListFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_URL, url)
+                    putString(ARG_UNAME, username)
                 }
             }
     }
@@ -84,7 +106,8 @@ class UserListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            url = it.getString(ARG_URL)
+            type = it.getString(ARG_URL)
+            username = it.getString(ARG_UNAME)
         }
     }
 
