@@ -2,13 +2,13 @@ package com.jundapp.githubpro.core.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.jundapp.githubpro.core.domain.repository.IUserRepository
+import com.jundapp.githubpro.core.domain.usecase.UserUseCase
 
-class UserListViewModel(private val userRepository: IUserRepository) : ViewModel() {
-    val users = userRepository.getAllUser().asLiveData()
-    fun searchUser(keyword: String) = userRepository.searchUser(keyword).asLiveData()
-    fun getFavorites() = userRepository.getFavoriteUser().asLiveData()
+class UserListViewModel(private val userUseCase: UserUseCase) : ViewModel() {
+    val users = userUseCase.getAllUser().asLiveData()
+    fun searchUser(keyword: String) = userUseCase.searchUser(keyword).asLiveData()
+    fun getFavorites() = userUseCase.getFavoriteUser().asLiveData()
 
-    fun getFollower(username: String) = userRepository.getFollower(username).asLiveData()
-    fun getFollowing(username: String) = userRepository.getFollowing(username).asLiveData()
+    fun getFollower(username: String) = userUseCase.getFollower(username).asLiveData()
+    fun getFollowing(username: String) = userUseCase.getFollowing(username).asLiveData()
 }

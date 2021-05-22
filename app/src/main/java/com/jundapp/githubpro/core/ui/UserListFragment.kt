@@ -87,12 +87,13 @@ class UserListFragment : Fragment() {
             is Resource.Loading -> binding.progressCircular.visibility = View.VISIBLE
             is Resource.Success -> {
                 binding.progressCircular.visibility = View.GONE
-                userListAdapter.data = users.data!!
+                binding.noData.visibility = if (users.data!!.isEmpty()) View.VISIBLE else View.INVISIBLE
+                userListAdapter.data = users.data
                 userListAdapter.notifyDataSetChanged()
             }
             is Resource.Error -> {
                 binding.progressCircular.visibility = View.GONE
-                // TODO : Show Error
+                binding.noData.visibility = View.VISIBLE
             }
         }
     }

@@ -15,5 +15,6 @@ object AppModule {
     val viewModelModule = module {
         viewModel { UserListViewModel(get()) }
         viewModel { DetailUserViewModel(get()) }
+        
     }
 }

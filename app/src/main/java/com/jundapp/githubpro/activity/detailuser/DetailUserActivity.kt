@@ -2,6 +2,7 @@ package com.jundapp.githubpro.activity.detailuser
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -81,7 +82,8 @@ class DetailUserActivity : AppCompatActivity() {
                         }
                         is Resource.Error -> {
                             binding.progressCircular.visibility = View.GONE
-                            // TODO : Show Error
+                            Toast.makeText(this, resources.getString(R.string.network_error), Toast.LENGTH_SHORT).show()
+                            finish()
                         }
                     }
                 }

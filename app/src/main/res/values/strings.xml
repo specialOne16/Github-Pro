@@ -15,20 +15,11 @@
     <string name="no_entry_found">No entry found.</string>
 
     <string name="love">Favorites</string>
-    <string name="setting">Settings</string>
-
-    <string name="add_favorites">%1$s Added to favorites</string>
-    <string name="failed_add_favorites">Failed to add user</string>
-
-    <string name="remove_favorites">%1$s removed from favorites</string>
-    <string name="failed_remove_favorites">Failed to remove user</string>
-
 
     <string name="desc_search_button" translatable="false">Search button</string>
     <string name="desc_logo" translatable="false">logo</string>
     <string name="favorites">Add To Favorites</string>
-    <string name="turn_on_off_alarm">Turn On/Off Alarm</string>
 
-    <string name="notif_message">Let\'s find amazing person in github!</string>
+    <string name="network_error">An internet connection error is occurred</string>
 
 </resources>

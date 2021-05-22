@@ -7,8 +7,6 @@ import com.jundapp.githubpro.core.ui.UserListFragment
 import com.jundapp.githubpro.core.ui.UserListFragment.Companion.TYPE_FOLLOWER
 import com.jundapp.githubpro.core.ui.UserListFragment.Companion.TYPE_FOLLOWING
 
-
-// TODO : Injection
 class DetailUserPagerAdapter(activity: AppCompatActivity, private val uname: String) : FragmentStateAdapter(activity) {
 
     override fun getItemCount(): Int {
