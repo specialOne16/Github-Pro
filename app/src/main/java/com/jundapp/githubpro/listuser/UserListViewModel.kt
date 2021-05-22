@@ -1,4 +1,4 @@
-package com.jundapp.githubpro.activity.fragment
+package com.jundapp.githubpro.listuser
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData

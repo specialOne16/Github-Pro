@@ -1,4 +1,4 @@
-package com.jundapp.githubpro.activity
+package com.jundapp.githubpro
 
 import android.content.Intent
 import android.net.Uri
@@ -6,10 +6,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.jundapp.githubpro.R
-import com.jundapp.githubpro.activity.fragment.UserListFragment
-import com.jundapp.githubpro.activity.fragment.UserListFragment.Companion.TYPE_ALL
-import com.jundapp.githubpro.activity.fragment.UserListFragment.Companion.TYPE_SEARCH
+import com.jundapp.githubpro.listuser.UserListFragment
+import com.jundapp.githubpro.listuser.UserListFragment.Companion.TYPE_ALL
+import com.jundapp.githubpro.listuser.UserListFragment.Companion.TYPE_SEARCH
 import com.jundapp.githubpro.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

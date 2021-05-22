@@ -1,4 +1,4 @@
-package com.jundapp.githubpro.activity
+package com.jundapp.githubpro
 
 import android.content.Intent
 import android.os.Bundle

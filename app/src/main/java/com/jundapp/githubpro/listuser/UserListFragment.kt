@@ -1,4 +1,4 @@
-package com.jundapp.githubpro.activity.fragment
+package com.jundapp.githubpro.listuser
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jundapp.githubpro.activity.detailuser.DetailUserActivity
+import com.jundapp.githubpro.detailuser.DetailUserActivity
 import com.jundapp.githubpro.core.data.Resource
 import com.jundapp.githubpro.core.domain.model.User
 import com.jundapp.githubpro.core.ui.UserListAdapter

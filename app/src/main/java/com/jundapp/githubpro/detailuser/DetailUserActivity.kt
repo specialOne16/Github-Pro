@@ -1,4 +1,4 @@
-package com.jundapp.githubpro.activity.detailuser
+package com.jundapp.githubpro.detailuser
 
 import android.os.Bundle
 import android.view.View

@@ -1,11 +1,11 @@
-package com.jundapp.githubpro.activity.detailuser
+package com.jundapp.githubpro.detailuser
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.jundapp.githubpro.activity.fragment.UserListFragment
-import com.jundapp.githubpro.activity.fragment.UserListFragment.Companion.TYPE_FOLLOWER
-import com.jundapp.githubpro.activity.fragment.UserListFragment.Companion.TYPE_FOLLOWING
+import com.jundapp.githubpro.listuser.UserListFragment
+import com.jundapp.githubpro.listuser.UserListFragment.Companion.TYPE_FOLLOWER
+import com.jundapp.githubpro.listuser.UserListFragment.Companion.TYPE_FOLLOWING
 
 class DetailUserPagerAdapter(activity: AppCompatActivity, private val uname: String) : FragmentStateAdapter(activity) {
 

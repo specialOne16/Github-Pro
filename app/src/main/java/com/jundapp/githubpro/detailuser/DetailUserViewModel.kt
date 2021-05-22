@@ -1,4 +1,4 @@
-package com.jundapp.githubpro.activity.detailuser
+package com.jundapp.githubpro.detailuser
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
