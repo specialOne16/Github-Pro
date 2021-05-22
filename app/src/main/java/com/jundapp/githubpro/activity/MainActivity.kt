@@ -7,9 +7,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.jundapp.githubpro.R
 import com.jundapp.githubpro.activity.favoriteuser.FavoriteUserActivity
-import com.jundapp.githubpro.core.ui.UserListFragment
-import com.jundapp.githubpro.core.ui.UserListFragment.Companion.TYPE_ALL
-import com.jundapp.githubpro.core.ui.UserListFragment.Companion.TYPE_SEARCH
+import com.jundapp.githubpro.activity.fragment.UserListFragment
+import com.jundapp.githubpro.activity.fragment.UserListFragment.Companion.TYPE_ALL
+import com.jundapp.githubpro.activity.fragment.UserListFragment.Companion.TYPE_SEARCH
 import com.jundapp.githubpro.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

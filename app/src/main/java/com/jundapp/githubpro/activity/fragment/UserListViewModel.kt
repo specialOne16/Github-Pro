@@ -1,4 +1,4 @@
-package com.jundapp.githubpro.core.ui
+package com.jundapp.githubpro.activity.fragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData

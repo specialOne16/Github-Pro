@@ -1,4 +1,4 @@
-package com.jundapp.githubpro.core.ui
+package com.jundapp.githubpro.activity.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jundapp.githubpro.activity.detailuser.DetailUserActivity
 import com.jundapp.githubpro.core.data.Resource
 import com.jundapp.githubpro.core.domain.model.User
+import com.jundapp.githubpro.core.ui.UserListAdapter
 import com.jundapp.githubpro.databinding.FragmentUserListBinding
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
