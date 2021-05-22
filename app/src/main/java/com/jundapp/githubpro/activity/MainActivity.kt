@@ -1,12 +1,12 @@
 package com.jundapp.githubpro.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.jundapp.githubpro.R
-import com.jundapp.githubpro.activity.favoriteuser.FavoriteUserActivity
 import com.jundapp.githubpro.activity.fragment.UserListFragment
 import com.jundapp.githubpro.activity.fragment.UserListFragment.Companion.TYPE_ALL
 import com.jundapp.githubpro.activity.fragment.UserListFragment.Companion.TYPE_SEARCH
@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.love -> {
-                val i = Intent(this, FavoriteUserActivity::class.java)
-                startActivity(i)
+                val uri = Uri.parse("githubpro://favorites")
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
                 true
             }
             else -> true

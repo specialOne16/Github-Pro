@@ -1,10 +1,10 @@
-package com.jundapp.githubpro.activity.favoriteuser
+package com.jundapp.githubpro.favorites
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.jundapp.githubpro.activity.fragment.UserListFragment
 import com.jundapp.githubpro.activity.fragment.UserListFragment.Companion.TYPE_FAVORITE
-import com.jundapp.githubpro.databinding.ActivityFavoriteUserBinding
+import com.jundapp.githubpro.favorites.databinding.ActivityFavoriteUserBinding
 
 class FavoriteUserActivity : AppCompatActivity() {
 
