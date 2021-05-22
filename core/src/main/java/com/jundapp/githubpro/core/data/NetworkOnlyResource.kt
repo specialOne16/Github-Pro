@@ -1,12 +1,11 @@
 package com.jundapp.githubpro.core.data
 
 import com.jundapp.githubpro.core.data.source.remote.network.ApiResponse
-import com.jundapp.githubpro.core.utils.AppExecutors
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
-abstract class NetworkOnlyResource<ResultType, RequestType>(private val mExecutors: AppExecutors) {
+abstract class NetworkOnlyResource<ResultType, RequestType> {
 
     private var result: Flow<Resource<ResultType>> = flow {
         emit(Resource.Loading())

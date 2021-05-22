@@ -22,7 +22,7 @@ class UserRepository constructor(
 ) : IUserRepository {
 
     override fun getAllUser(): Flow<Resource<List<User>>> =
-        object : NetworkBoundResource<List<User>, List<UserResponse>>(appExecutors) {
+        object : NetworkBoundResource<List<User>, List<UserResponse>>() {
             override fun loadFromDB(): Flow<List<User>> {
                 return localDataSource.getAllUser().map { MappingHelper.mapEntitiesToDomain(it) }
             }
@@ -40,7 +40,7 @@ class UserRepository constructor(
         }.asFlow()
 
     override fun searchUser(keyword: String): Flow<Resource<List<User>>> =
-        object : NetworkBoundResource<List<User>, List<UserResponse>>(appExecutors) {
+        object : NetworkBoundResource<List<User>, List<UserResponse>>() {
             override fun loadFromDB(): Flow<List<User>> {
                 return localDataSource.searchUser(keyword).map {
                     MappingHelper.mapEntitiesToDomain(it)
@@ -60,7 +60,7 @@ class UserRepository constructor(
         }.asFlow()
 
     override fun getUser(username: String): Flow<Resource<DetailUserData>> =
-        object : NetworkOnlyResource<DetailUserData, DetailUserResponse>(appExecutors) {
+        object : NetworkOnlyResource<DetailUserData, DetailUserResponse>() {
             override suspend fun createCall(): Flow<ApiResponse<DetailUserResponse>> =
                 remoteDataSource.getUser(username)
 
@@ -72,7 +72,7 @@ class UserRepository constructor(
         }.asFlow()
 
     override fun getFollowing(username: String): Flow<Resource<List<User>>> =
-        object : NetworkOnlyResource<List<User>, List<UserResponse>>(appExecutors) {
+        object : NetworkOnlyResource<List<User>, List<UserResponse>>() {
             override suspend fun createCall(): Flow<ApiResponse<List<UserResponse>>> =
                 remoteDataSource.getFollowing(username)
 
@@ -83,7 +83,7 @@ class UserRepository constructor(
         }.asFlow()
 
     override fun getFollower(username: String): Flow<Resource<List<User>>> =
-        object : NetworkOnlyResource<List<User>, List<UserResponse>>(appExecutors) {
+        object : NetworkOnlyResource<List<User>, List<UserResponse>>() {
             override suspend fun createCall(): Flow<ApiResponse<List<UserResponse>>> =
                 remoteDataSource.getFollowers(username)
 
