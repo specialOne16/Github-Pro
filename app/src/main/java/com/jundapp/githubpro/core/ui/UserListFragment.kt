@@ -11,6 +11,7 @@ import com.jundapp.githubpro.activity.detailuser.DetailUserActivity
 import com.jundapp.githubpro.core.data.Resource
 import com.jundapp.githubpro.core.domain.model.User
 import com.jundapp.githubpro.databinding.FragmentUserListBinding
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 const val ARG_URL = "param_url"
@@ -22,10 +23,9 @@ class UserListFragment : Fragment() {
     private var username: String? = null
 
     private val userListViewModel: UserListViewModel by viewModel()
+    private val userListAdapter: UserListAdapter by inject()
     private var _binding: FragmentUserListBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var userListAdapter: UserListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +43,6 @@ class UserListFragment : Fragment() {
 
     private fun getUserList() {
         if (activity != null) {
-            userListAdapter = UserListAdapter(requireActivity())
             binding.listUser.adapter = userListAdapter
             binding.listUser.layoutManager = LinearLayoutManager(context)
 
@@ -72,8 +71,7 @@ class UserListFragment : Fragment() {
                     viewLifecycleOwner,
                     { users -> updateUi(users) })
             }
-        } ?:
-        when (type) {
+        } ?: when (type) {
             TYPE_FAVORITE -> userListViewModel.getFavorites()
                 .observe(viewLifecycleOwner, { users -> updateUi(users) })
             else -> userListViewModel.users.observe(
@@ -87,7 +85,8 @@ class UserListFragment : Fragment() {
             is Resource.Loading -> binding.progressCircular.visibility = View.VISIBLE
             is Resource.Success -> {
                 binding.progressCircular.visibility = View.GONE
-                binding.noData.visibility = if (users.data!!.isEmpty()) View.VISIBLE else View.INVISIBLE
+                binding.noData.visibility =
+                    if (users.data!!.isEmpty()) View.VISIBLE else View.INVISIBLE
                 userListAdapter.data = users.data
                 userListAdapter.notifyDataSetChanged()
             }

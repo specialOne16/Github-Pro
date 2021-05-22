@@ -4,6 +4,7 @@ import android.app.Application
 import com.jundapp.githubpro.core.di.CoreModule.databaseModule
 import com.jundapp.githubpro.core.di.CoreModule.networkModule
 import com.jundapp.githubpro.core.di.CoreModule.repositoryModule
+import com.jundapp.githubpro.di.AppModule.adapterModule
 import com.jundapp.githubpro.di.AppModule.useCaseModule
 import com.jundapp.githubpro.di.AppModule.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -24,7 +25,8 @@ class MyApplication : Application() {
                     networkModule,
                     repositoryModule,
                     useCaseModule,
-                    viewModelModule
+                    viewModelModule,
+                    adapterModule
                 )
             )
         }

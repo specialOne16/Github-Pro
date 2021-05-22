@@ -1,17 +1,15 @@
 package com.jundapp.githubpro.core.ui
 
-import android.app.Activity
+import android.app.Application
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.jundapp.githubpro.R
 import com.jundapp.githubpro.core.domain.model.User
-import de.hdodenhof.circleimageview.CircleImageView
+import com.jundapp.githubpro.databinding.AdapterUserListBinding
 
-class UserListAdapter(private val context: Activity) :
+class UserListAdapter(private val context: Application) :
     RecyclerView.Adapter<UserListAdapter.ListViewHolder>() {
 
     var data: List<User> = arrayListOf()
@@ -19,19 +17,13 @@ class UserListAdapter(private val context: Activity) :
     interface OnItemClickCallback {
         fun onItemClicked(data: User)
     }
-    // TODO : change to view binding
-    class ListViewHolder(rowView: View) : RecyclerView.ViewHolder(rowView) {
 
-        val ivAvatar: CircleImageView = rowView.findViewById(R.id.ivAvatar)
-
-        val tvName: TextView = rowView.findViewById(R.id.tvName)
-        val tvUName: TextView = rowView.findViewById(R.id.tvUName)
-    }
+    class ListViewHolder(val binding: AdapterUserListBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val rowView = inflater.inflate(R.layout.adapter_user_list, parent, false)
-        return ListViewHolder(rowView)
+        val binding = AdapterUserListBinding.inflate(inflater, parent, false)
+        return ListViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -41,14 +33,14 @@ class UserListAdapter(private val context: Activity) :
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         val thisData = data[position]
 
-        holder.tvName.text = thisData.username
-        holder.tvUName.text = thisData.username
+        holder.binding.tvName.text = thisData.username
+        holder.binding.tvUName.text = thisData.username
 
         Glide.with(context)
             .load(thisData.avatarUrl)
             .placeholder(R.drawable.ic_avatar)
             .error(R.drawable.ic_avatar)
-            .into(holder.ivAvatar)
+            .into(holder.binding.ivAvatar)
 
         holder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(data[holder.absoluteAdapterPosition]) }
     }
