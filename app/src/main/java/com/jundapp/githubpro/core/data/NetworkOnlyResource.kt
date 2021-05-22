@@ -1,44 +1,37 @@
 package com.jundapp.githubpro.core.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import com.jundapp.githubpro.core.data.source.remote.network.ApiResponse
 import com.jundapp.githubpro.core.utils.AppExecutors
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 
 abstract class NetworkOnlyResource<ResultType, RequestType>(private val mExecutors: AppExecutors) {
 
-    private val result = MediatorLiveData<Resource<ResultType>>()
-
-    init {
-        result.value = Resource.Loading(null)
-        fetchFromNetwork()
+    private var result: Flow<Resource<ResultType>> = flow {
+        emit(Resource.Loading())
+        when (val apiResponse = createCall().first()) {
+            is ApiResponse.Success -> {
+                emit(Resource.Success(mapType(apiResponse.data)))
+            }
+            is ApiResponse.Empty -> {
+                emit(Resource.Success(loadEmpty()))
+            }
+            is ApiResponse.Error -> {
+                onFetchFailed()
+                emit(Resource.Error<ResultType>(apiResponse.errorMessage))
+            }
+        }
     }
 
     protected open fun onFetchFailed() {}
 
-    protected abstract fun createCall(): LiveData<ApiResponse<RequestType>>
+    protected abstract suspend fun createCall(): Flow<ApiResponse<RequestType>>
 
     protected abstract fun mapType(request: RequestType): ResultType
 
     protected abstract fun loadEmpty(): ResultType
 
-    private fun fetchFromNetwork() {
+    fun asFlow(): Flow<Resource<ResultType>> = result
 
-        val apiResponse = createCall()
-
-        result.addSource(apiResponse) { response ->
-            result.removeSource(apiResponse)
-            when (response) {
-                is ApiResponse.Success ->
-                    result.value = Resource.Success(mapType(response.data))
-                is ApiResponse.Empty -> result.value = Resource.Success(loadEmpty())
-                is ApiResponse.Error -> {
-                    onFetchFailed()
-                    result.value = Resource.Error(response.errorMessage, loadEmpty())
-                }
-            }
-        }
-    }
-
-    fun asLiveData(): LiveData<Resource<ResultType>> = result
 }

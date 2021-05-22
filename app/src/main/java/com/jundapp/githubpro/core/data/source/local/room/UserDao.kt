@@ -1,26 +1,26 @@
 package com.jundapp.githubpro.core.data.source.local.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.jundapp.githubpro.core.data.source.local.entity.UserEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
 
     @Query("SELECT * FROM user")
-    fun getAllUser(): LiveData<List<UserEntity>>
+    fun getAllUser(): Flow<List<UserEntity>>
 
     @Query("SELECT * FROM user WHERE username LIKE :keyword")
-    fun searchUser(keyword: String): LiveData<List<UserEntity>>
+    fun searchUser(keyword: String): Flow<List<UserEntity>>
 
     @Query("SELECT * FROM user WHERE isFavorite=1")
-    fun getFavoriteUser(): LiveData<List<UserEntity>>
+    fun getFavoriteUser(): Flow<List<UserEntity>>
 
     @Query("SELECT isFavorite FROM user WHERE id=:userId")
-    fun getIsFavorite(userId: Int): LiveData<Boolean>
+    fun getIsFavorite(userId: Int): Flow<Boolean>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUser(users: List<UserEntity>)
+    suspend fun insertUser(users: List<UserEntity>)
 
     @Update
     fun updateUser(user: UserEntity)

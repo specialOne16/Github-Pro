@@ -1,8 +1,5 @@
 package com.jundapp.githubpro.core.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Transformations
 import com.jundapp.githubpro.core.data.source.local.LocalDataSource
 import com.jundapp.githubpro.core.data.source.remote.RemoteDataSource
 import com.jundapp.githubpro.core.data.source.remote.network.ApiResponse
@@ -13,6 +10,10 @@ import com.jundapp.githubpro.core.domain.model.User
 import com.jundapp.githubpro.core.domain.repository.IUserRepository
 import com.jundapp.githubpro.core.utils.AppExecutors
 import com.jundapp.githubpro.core.utils.MappingHelper
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class UserRepository constructor(
     private val remoteDataSource: RemoteDataSource,
@@ -20,30 +21,28 @@ class UserRepository constructor(
     private val appExecutors: AppExecutors
 ) : IUserRepository {
 
-    override fun getAllUser(): LiveData<Resource<List<User>>> =
+    override fun getAllUser(): Flow<Resource<List<User>>> =
         object : NetworkBoundResource<List<User>, List<UserResponse>>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<User>> {
-                return Transformations.map(localDataSource.getAllUser()) {
-                    MappingHelper.mapEntitiesToDomain(it)
-                }
+            override fun loadFromDB(): Flow<List<User>> {
+                return localDataSource.getAllUser().map { MappingHelper.mapEntitiesToDomain(it) }
             }
 
             override fun shouldFetch(data: List<User>?): Boolean =
                 data == null || data.isEmpty()
 
-            override fun createCall(): LiveData<ApiResponse<List<UserResponse>>> =
+            override suspend fun createCall(): Flow<ApiResponse<List<UserResponse>>> =
                 remoteDataSource.getAllUser()
 
-            override fun saveCallResult(data: List<UserResponse>) {
+            override suspend fun saveCallResult(data: List<UserResponse>) {
                 val userList = MappingHelper.mapResponsesToEntities(data)
                 localDataSource.insertUser(userList)
             }
-        }.asLiveData()
+        }.asFlow()
 
-    override fun searchUser(keyword: String): LiveData<Resource<List<User>>> =
+    override fun searchUser(keyword: String): Flow<Resource<List<User>>> =
         object : NetworkBoundResource<List<User>, List<UserResponse>>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<User>> {
-                return Transformations.map(localDataSource.searchUser(keyword)) {
+            override fun loadFromDB(): Flow<List<User>> {
+                return localDataSource.searchUser(keyword).map {
                     MappingHelper.mapEntitiesToDomain(it)
                 }
             }
@@ -51,18 +50,18 @@ class UserRepository constructor(
             override fun shouldFetch(data: List<User>?): Boolean =
                 data == null || data.size < 10
 
-            override fun createCall(): LiveData<ApiResponse<List<UserResponse>>> =
+            override suspend fun createCall(): Flow<ApiResponse<List<UserResponse>>> =
                 remoteDataSource.searchUser(keyword)
 
-            override fun saveCallResult(data: List<UserResponse>) {
+            override suspend fun saveCallResult(data: List<UserResponse>) {
                 val userList = MappingHelper.mapResponsesToEntities(data)
                 localDataSource.insertUser(userList)
             }
-        }.asLiveData()
+        }.asFlow()
 
-    override fun getUser(username: String): LiveData<Resource<DetailUserData>> =
+    override fun getUser(username: String): Flow<Resource<DetailUserData>> =
         object : NetworkOnlyResource<DetailUserData, DetailUserResponse>(appExecutors) {
-            override fun createCall(): LiveData<ApiResponse<DetailUserResponse>> =
+            override suspend fun createCall(): Flow<ApiResponse<DetailUserResponse>> =
                 remoteDataSource.getUser(username)
 
             override fun mapType(request: DetailUserResponse): DetailUserData =
@@ -70,38 +69,34 @@ class UserRepository constructor(
 
             override fun loadEmpty(): DetailUserData =
                 DetailUserData("", 0, "", "", "", "")
-        }.asLiveData()
+        }.asFlow()
 
-    override fun getFollowing(username: String): LiveData<Resource<List<User>>> =
+    override fun getFollowing(username: String): Flow<Resource<List<User>>> =
         object : NetworkOnlyResource<List<User>, List<UserResponse>>(appExecutors) {
-            override fun createCall(): LiveData<ApiResponse<List<UserResponse>>> =
+            override suspend fun createCall(): Flow<ApiResponse<List<UserResponse>>> =
                 remoteDataSource.getFollowing(username)
 
             override fun mapType(request: List<UserResponse>): List<User> =
                 MappingHelper.mapUserResponsesToDomain(request)
 
             override fun loadEmpty(): List<User> = arrayListOf()
-        }.asLiveData()
+        }.asFlow()
 
-    override fun getFollower(username: String): LiveData<Resource<List<User>>> =
+    override fun getFollower(username: String): Flow<Resource<List<User>>> =
         object : NetworkOnlyResource<List<User>, List<UserResponse>>(appExecutors) {
-            override fun createCall(): LiveData<ApiResponse<List<UserResponse>>> =
+            override suspend fun createCall(): Flow<ApiResponse<List<UserResponse>>> =
                 remoteDataSource.getFollowers(username)
 
             override fun mapType(request: List<UserResponse>): List<User> =
                 MappingHelper.mapUserResponsesToDomain(request)
 
             override fun loadEmpty(): List<User> = arrayListOf()
-        }.asLiveData()
+        }.asFlow()
 
-    override fun getFavoriteUser(): LiveData<Resource<List<User>>> {
-        val result = MediatorLiveData<Resource<List<User>>>()
-        result.addSource(Transformations.map(localDataSource.getFavoriteUser()) {
-            MappingHelper.mapEntitiesToDomain(it)
-        }) { favorites ->
-            result.value = Resource.Success(favorites)
-        }
-        return result
+    override fun getFavoriteUser(): Flow<Resource<List<User>>> = flow {
+        emit(Resource.Loading())
+        emitAll(localDataSource.getFavoriteUser().map { MappingHelper.mapEntitiesToDomain(it) }
+            .map { Resource.Success(it) })
     }
 
     override fun setFavorite(user: User, isFavorite: Boolean) {
@@ -109,6 +104,7 @@ class UserRepository constructor(
         appExecutors.diskIO().execute { localDataSource.setFavorite(userEntity, isFavorite) }
     }
 
-    override fun getIsFavorite(user: User): LiveData<Boolean> = localDataSource.getIsFavorite(MappingHelper.mapDomainToEntity(user))
+    override fun getIsFavorite(user: User): Flow<Boolean> =
+        localDataSource.getIsFavorite(MappingHelper.mapDomainToEntity(user))
 
 }
