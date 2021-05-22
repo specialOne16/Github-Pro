@@ -1,6 +1,7 @@
 package com.jundapp.githubpro.core.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Transformations
 import com.jundapp.githubpro.core.data.source.local.LocalDataSource
 import com.jundapp.githubpro.core.data.source.remote.RemoteDataSource
@@ -76,7 +77,8 @@ class UserRepository constructor(
             override fun createCall(): LiveData<ApiResponse<List<UserResponse>>> =
                 remoteDataSource.getFollowing(username)
 
-            override fun mapType(request: List<UserResponse>): List<User> = MappingHelper.mapUserResponsesToDomain(request)
+            override fun mapType(request: List<UserResponse>): List<User> =
+                MappingHelper.mapUserResponsesToDomain(request)
 
             override fun loadEmpty(): List<User> = arrayListOf()
         }.asLiveData()
@@ -86,9 +88,27 @@ class UserRepository constructor(
             override fun createCall(): LiveData<ApiResponse<List<UserResponse>>> =
                 remoteDataSource.getFollowers(username)
 
-            override fun mapType(request: List<UserResponse>): List<User> = MappingHelper.mapUserResponsesToDomain(request)
+            override fun mapType(request: List<UserResponse>): List<User> =
+                MappingHelper.mapUserResponsesToDomain(request)
 
             override fun loadEmpty(): List<User> = arrayListOf()
         }.asLiveData()
+
+    override fun getFavoriteUser(): LiveData<Resource<List<User>>> {
+        val result = MediatorLiveData<Resource<List<User>>>()
+        result.addSource(Transformations.map(localDataSource.getFavoriteUser()) {
+            MappingHelper.mapEntitiesToDomain(it)
+        }) { favorites ->
+            result.value = Resource.Success(favorites)
+        }
+        return result
+    }
+
+    override fun setFavorite(user: User, isFavorite: Boolean) {
+        val userEntity = MappingHelper.mapDomainToEntity(user)
+        appExecutors.diskIO().execute { localDataSource.setFavorite(userEntity, isFavorite) }
+    }
+
+    override fun getIsFavorite(user: User): LiveData<Boolean> = localDataSource.getIsFavorite(MappingHelper.mapDomainToEntity(user))
 
 }

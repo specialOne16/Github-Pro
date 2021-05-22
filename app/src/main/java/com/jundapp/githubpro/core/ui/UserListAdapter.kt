@@ -45,7 +45,7 @@ class UserListAdapter(private val context: Activity) :
         holder.tvUName.text = thisData.username
 
         Glide.with(context)
-            .load(thisData.avatar_url)
+            .load(thisData.avatarUrl)
             .placeholder(R.drawable.ic_avatar)
             .error(R.drawable.ic_avatar)
             .into(holder.ivAvatar)

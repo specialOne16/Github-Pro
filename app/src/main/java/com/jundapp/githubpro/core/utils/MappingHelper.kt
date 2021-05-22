@@ -13,14 +13,14 @@ object MappingHelper {
             User(
                 username = it.username,
                 id = it.id,
-                avatar_url = it.avatar_url
+                avatarUrl = it.avatarUrl
             )
         }
 
     fun mapDomainToEntity(data: User): UserEntity = UserEntity(
         username = data.username,
         id = data.id,
-        avatar_url = data.avatar_url
+        avatarUrl = data.avatarUrl
     )
 
     fun mapResponsesToEntities(data: List<UserResponse>): List<UserEntity> {
@@ -29,7 +29,7 @@ object MappingHelper {
             val user = UserEntity(
                 username = it.username,
                 id = it.id,
-                avatar_url = it.avatar_url
+                avatarUrl = it.avatar_url
             )
             userList.add(user)
         }
@@ -50,7 +50,7 @@ object MappingHelper {
             User(
                 username = it.username,
                 id = it.id,
-                avatar_url = it.avatar_url
+                avatarUrl = it.avatar_url
             )
         }
 }

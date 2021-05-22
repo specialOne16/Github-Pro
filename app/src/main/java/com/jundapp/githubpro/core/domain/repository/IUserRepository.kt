@@ -12,4 +12,8 @@ interface IUserRepository {
 
     fun getFollowing(username: String): LiveData<Resource<List<User>>>
     fun getFollower(username: String): LiveData<Resource<List<User>>>
+
+    fun getFavoriteUser(): LiveData<Resource<List<User>>>
+    fun setFavorite(user: User, isFavorite: Boolean)
+    fun getIsFavorite(user: User): LiveData<Boolean>
 }

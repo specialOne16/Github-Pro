@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.JobHunt">
+        <activity android:name=".activity.favoriteuser.FavoriteUserActivity" />
         <activity android:name=".activity.detailuser.DetailUserActivity" />
         <activity android:name=".activity.MainActivity" />
         <activity
@@ -23,7 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

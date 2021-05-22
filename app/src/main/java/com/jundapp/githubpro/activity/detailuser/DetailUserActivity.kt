@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jundapp.githubpro.R
@@ -26,7 +27,7 @@ class DetailUserActivity : AppCompatActivity() {
 
     private val detailUserViewModel: DetailUserViewModel by viewModel()
     private lateinit var binding: ActivityDetailBinding
-    private var user: User? = null
+    private var favorite: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,15 +35,26 @@ class DetailUserActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.title = ""
 
-        user = intent.getParcelableExtra(EXTRA_USER)
+        val user = intent.getParcelableExtra<User>(EXTRA_USER)
 
-        binding.fabFavorite.setOnClickListener {
-            // TODO : Add to favorites
-        }
-
-        // TODO : ganti tab layout
         user?.username?.let {
+            binding.fabFavorite.setOnClickListener {
+                detailUserViewModel.setFavorite(user, !favorite)
+            }
+
             setUpTabLayout(it)
+
+            detailUserViewModel.getIsFavorite(user).observe(this, { isFavorite ->
+                if (isFavorite != null) {
+                    favorite = isFavorite
+                    binding.fabFavorite.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            this@DetailUserActivity,
+                            if (isFavorite) R.drawable.ic_un_favorite else R.drawable.ic_favorite
+                        )
+                    )
+                }
+            })
 
             detailUserViewModel.getUserDetail(it).observe(this, { user ->
                 if (user != null) {

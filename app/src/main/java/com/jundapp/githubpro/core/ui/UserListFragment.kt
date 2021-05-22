@@ -43,7 +43,7 @@ class UserListFragment : Fragment() {
 
     private fun getUserList() {
         if (activity != null) {
-            userListAdapter = UserListAdapter(activity!!)
+            userListAdapter = UserListAdapter(requireActivity())
             binding.listUser.adapter = userListAdapter
             binding.listUser.layoutManager = LinearLayoutManager(context)
 
@@ -72,7 +72,14 @@ class UserListFragment : Fragment() {
                     viewLifecycleOwner,
                     { users -> updateUi(users) })
             }
-        } ?: userListViewModel.users.observe(viewLifecycleOwner, { users -> updateUi(users) })
+        } ?:
+        when (type) {
+            TYPE_FAVORITE -> userListViewModel.getFavorites()
+                .observe(viewLifecycleOwner, { users -> updateUi(users) })
+            else -> userListViewModel.users.observe(
+                viewLifecycleOwner,
+                { users -> updateUi(users) })
+        }
     }
 
     private fun updateUi(users: Resource<List<User>>) {
@@ -92,6 +99,7 @@ class UserListFragment : Fragment() {
 
     companion object {
         const val TYPE_ALL = "type_all_user"
+        const val TYPE_FAVORITE = "type_all_user"
         const val TYPE_SEARCH = "type_search_user"
         const val TYPE_FOLLOWING = "type_following"
         const val TYPE_FOLLOWER = "type_follower"

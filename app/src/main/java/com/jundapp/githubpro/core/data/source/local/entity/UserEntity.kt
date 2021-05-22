@@ -15,5 +15,7 @@ data class UserEntity (
     @NonNull
     val id: Int,
 
-    val avatar_url: String?,
+    val avatarUrl: String?,
+
+    var isFavorite: Boolean = false
 ) : Parcelable
