@@ -88,7 +88,7 @@ class UserListFragment : Fragment() {
                 binding.progressCircular.visibility = View.GONE
                 binding.noData.visibility =
                     if (users.data!!.isEmpty()) View.VISIBLE else View.INVISIBLE
-                userListAdapter.data = users.data
+                userListAdapter.data = users.data!!
                 userListAdapter.notifyDataSetChanged()
             }
             is Resource.Error -> {

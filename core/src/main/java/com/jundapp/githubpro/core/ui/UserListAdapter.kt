@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.jundapp.githubpro.R
+import com.jundapp.githubpro.core.R
+import com.jundapp.githubpro.core.databinding.AdapterUserListBinding
 import com.jundapp.githubpro.core.domain.model.User
-import com.jundapp.githubpro.databinding.AdapterUserListBinding
 
 class UserListAdapter(private val context: Application) :
     RecyclerView.Adapter<UserListAdapter.ListViewHolder>() {
