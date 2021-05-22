@@ -39,6 +39,26 @@ class UserRepository constructor(
             }
         }.asLiveData()
 
+    override fun searchUser(keyword: String): LiveData<Resource<List<User>>> =
+        object : NetworkBoundResource<List<User>, List<UserResponse>>(appExecutors) {
+            override fun loadFromDB(): LiveData<List<User>> {
+                return Transformations.map(localDataSource.searchUser(keyword)) {
+                    MappingHelper.mapEntitiesToDomain(it)
+                }
+            }
+
+            override fun shouldFetch(data: List<User>?): Boolean =
+                data == null || data.size < 10
+
+            override fun createCall(): LiveData<ApiResponse<List<UserResponse>>> =
+                remoteDataSource.searchUser(keyword)
+
+            override fun saveCallResult(data: List<UserResponse>) {
+                val userList = MappingHelper.mapResponsesToEntities(data)
+                localDataSource.insertUser(userList)
+            }
+        }.asLiveData()
+
     override fun getUser(username: String): LiveData<Resource<DetailUserData>> =
         object : NetworkOnlyResource<DetailUserData, DetailUserResponse>(appExecutors) {
             override fun createCall(): LiveData<ApiResponse<DetailUserResponse>> =

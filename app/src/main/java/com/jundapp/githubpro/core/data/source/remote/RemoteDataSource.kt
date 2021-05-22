@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.jundapp.githubpro.core.data.source.remote.network.ApiResponse
 import com.jundapp.githubpro.core.data.source.remote.network.ApiService
 import com.jundapp.githubpro.core.data.source.remote.response.DetailUserResponse
+import com.jundapp.githubpro.core.data.source.remote.response.SearchUserResponse
 import com.jundapp.githubpro.core.data.source.remote.response.UserResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,6 +31,32 @@ class RemoteDataSource(private val apiService: ApiService) {
             }
 
             override fun onFailure(call: Call<List<UserResponse>>, t: Throwable) {
+                resultData.value = ApiResponse.Error(t.message.toString())
+                Log.e("RemoteDataSource", t.message.toString())
+            }
+        })
+
+        return resultData
+
+    }
+
+    fun searchUser(keyword: String): LiveData<ApiResponse<List<UserResponse>>> {
+
+        val resultData = MutableLiveData<ApiResponse<List<UserResponse>>>()
+
+        val client = apiService.searchUser(keyword)
+
+        client.enqueue(object : Callback<SearchUserResponse> {
+            override fun onResponse(
+                call: Call<SearchUserResponse>,
+                response: Response<SearchUserResponse>
+            ) {
+                val dataArray = response.body()?.users
+                resultData.value =
+                    if (dataArray != null) ApiResponse.Success(dataArray) else ApiResponse.Empty
+            }
+
+            override fun onFailure(call: Call<SearchUserResponse>, t: Throwable) {
                 resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }

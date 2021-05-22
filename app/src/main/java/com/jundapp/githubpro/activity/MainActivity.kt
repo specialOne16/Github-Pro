@@ -6,6 +6,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.jundapp.githubpro.R
 import com.jundapp.githubpro.core.ui.UserListFragment
+import com.jundapp.githubpro.core.ui.UserListFragment.Companion.TYPE_ALL
+import com.jundapp.githubpro.core.ui.UserListFragment.Companion.TYPE_SEARCH
 import com.jundapp.githubpro.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -22,8 +24,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun showList(keyword: String){
-        val userListFragment = UserListFragment.newInstance()
+    private fun showList(keyword: String) {
+        val userListFragment = UserListFragment.newInstance(
+            if (keyword.isBlank()) TYPE_ALL else TYPE_SEARCH, keyword
+        )
         supportFragmentManager
             .beginTransaction()
             .replace(binding.userListContainer.id, userListFragment)
@@ -36,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId){
+        return when (item.itemId) {
             R.id.love -> {
                 // TODO : open favorite
 //                val i = Intent(this, FavoriteActivity::class.java)

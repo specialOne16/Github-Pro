@@ -66,6 +66,8 @@ class UserListFragment : Fragment() {
                     .observe(viewLifecycleOwner, { users -> updateUi(users) })
                 TYPE_FOLLOWING -> userListViewModel.getFollowing(it)
                     .observe(viewLifecycleOwner, { users -> updateUi(users) })
+                TYPE_SEARCH -> userListViewModel.searchUser(it)
+                    .observe(viewLifecycleOwner, { users -> updateUi(users) })
                 else -> userListViewModel.users.observe(
                     viewLifecycleOwner,
                     { users -> updateUi(users) })
@@ -90,6 +92,7 @@ class UserListFragment : Fragment() {
 
     companion object {
         const val TYPE_ALL = "type_all_user"
+        const val TYPE_SEARCH = "type_search_user"
         const val TYPE_FOLLOWING = "type_following"
         const val TYPE_FOLLOWER = "type_follower"
 

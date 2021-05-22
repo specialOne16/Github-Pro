@@ -10,6 +10,9 @@ interface UserDao {
     @Query("SELECT * FROM user")
     fun getAllUser(): LiveData<List<UserEntity>>
 
+    @Query("SELECT * FROM user WHERE username LIKE :keyword")
+    fun searchUser(keyword: String): LiveData<List<UserEntity>>
+
     // TODO : Get favorite user
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
