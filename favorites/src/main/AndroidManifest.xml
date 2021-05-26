@@ -4,7 +4,7 @@
     package="com.jundapp.githubpro.favorites">
 
     <dist:module
-        dist:instant="false"
+        dist:instant="true"
         dist:title="@string/title_favorites">
         <dist:delivery>
             <dist:install-time />
