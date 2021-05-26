@@ -8,6 +8,8 @@ import com.jundapp.githubpro.core.data.source.remote.RemoteDataSource
 import com.jundapp.githubpro.core.data.source.remote.network.ApiService
 import com.jundapp.githubpro.core.domain.repository.IUserRepository
 import com.jundapp.githubpro.core.utils.AppExecutors
+import net.sqlcipher.database.SQLiteDatabase
+import net.sqlcipher.database.SupportFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -20,10 +22,14 @@ object CoreModule {
     val databaseModule = module {
         factory { get<UserDatabase>().userDao() }
         single {
+            val passphrase: ByteArray = SQLiteDatabase.getBytes("jundapp".toCharArray())
+            val factory = SupportFactory(passphrase)
             Room.databaseBuilder(
                 androidContext(),
                 UserDatabase::class.java, "user.db"
-            ).fallbackToDestructiveMigration().build()
+            ).fallbackToDestructiveMigration()
+                .openHelperFactory(factory)
+                .build()
         }
     }
 
